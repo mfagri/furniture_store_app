@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "748402670692",
+    "project_id": "chairsapp",
+    "storage_bucket": "chairsapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748402670692:android:373aa2403160da0327b371",
+        "android_client_info": {
+          "package_name": "com.example.chairsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "748402670692-2oi9iqcr12sp7uvakqu2kuo8vp5pv8ck.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoqeAnvjQ5g3srn3MDe8-O94RGj2d30BI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748402670692-2oi9iqcr12sp7uvakqu2kuo8vp5pv8ck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
