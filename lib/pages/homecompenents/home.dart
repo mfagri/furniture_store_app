@@ -94,8 +94,15 @@ class _homeState extends State<home> {
                           nameCategory: data1[_selectedIndex1].name.toString(),
                         )
                       else Container(
+                        height: 300,
                           child: Center(
-                            child: Text('No product yet!!'),
+                            child: Text('No products yet!',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w500
+                            ),
+                            ),
                           ),
                         ),
                 // )

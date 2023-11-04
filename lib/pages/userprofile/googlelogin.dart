@@ -176,7 +176,14 @@ class _GoogleloginState extends State<Googlelogin> {
                       )),
                       InkWell(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder:(context) => SignupForm(),));
+                          Navigator.push(context, MaterialPageRoute(builder:(context) => SignupForm(),)).then((valu) {
+                            value.Check_auth();
+                            value.get_user();
+                            // setState(() {
+                              
+                            // });
+                            // value.edit_index(0);
+                          });
                         },
                         child: Center(
                             child: Text(

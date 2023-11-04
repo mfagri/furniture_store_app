@@ -16,7 +16,7 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.orange,
       body: FutureBuilder(
         future: Provider.of<Categorie_list>(context, listen: false).fetchCategorey(),
         builder: (BuildContext context, snapshot) {
@@ -24,9 +24,11 @@ class _SplashState extends State<Splash> {
           Provider.of<Categorie_list>(context, listen: false).get_user();
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(
-                color: Colors.black,
+                color: Colors.black87,
+                backgroundColor: Colors.black,
+                strokeWidth: 8,
               ),
             );
           }
@@ -47,7 +49,11 @@ class _SplashState extends State<Splash> {
             );
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                  color: Colors.black87,
+                  backgroundColor: Colors.white,
+                  strokeWidth: 8,
+                ),
             );
           }
         },

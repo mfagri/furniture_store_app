@@ -62,11 +62,14 @@ class _CartitemState extends State<Cartitem> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.mycart.product!.name.toString(),
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                      Container(
+                        width: 150,
+                        child: Text(
+                          widget.mycart.product!.name.toString(),
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
@@ -99,7 +102,6 @@ class _CartitemState extends State<Cartitem> {
                           padding: const EdgeInsets.all(2.0),
                           child: InkWell(
                             onTap: () {
-                              
                               _showDeleteConfirmationDialog(widget.mycart);
                             },
                             child: Container(
@@ -191,12 +193,16 @@ class _CartitemState extends State<Cartitem> {
       ),
     );
   }
+
   void _showDeleteConfirmationDialog(cart mycart) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete Cart Item",style: TextStyle(fontWeight: FontWeight.bold),),
+          title: Text(
+            "Delete Cart Item",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           content: Text("Are you sure you want to delete this cart item?"),
           actions: <Widget>[
             TextButton(
@@ -205,13 +211,19 @@ class _CartitemState extends State<Cartitem> {
                 // Perform the delete operation here
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text("Delete",style: TextStyle(color: Colors.orange),),
+              child: Text(
+                "Delete",
+                style: TextStyle(color: Colors.orange),
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text("Cancel",style: TextStyle(color: Colors.orange),),
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.orange),
+              ),
             ),
           ],
         );
@@ -219,5 +231,3 @@ class _CartitemState extends State<Cartitem> {
     );
   }
 }
-
-

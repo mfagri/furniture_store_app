@@ -37,7 +37,7 @@ class _SginupContainerState extends State<SginupContainer> {
     return tempFile;
   }
 
-  void _submitForm() {
+  void _submitForm()async{
     if (widget.img == null)//send msg if no img
       loadAssetAsFile('lib/images/Empty Profile Icon.jpeg').then((file) {
         setState(() {
@@ -45,13 +45,13 @@ class _SginupContainerState extends State<SginupContainer> {
         });
       });
     if (_formKey.currentState!.validate()) {
-      Apiserver.uploadImageWithFormData(
+     await Apiserver.uploadImageWithFormData(
           widget.img!, _username!, _emaile!, _password!, _password2!);
 
-      context.read<Categorie_list>().Check_auth();
-      context.read<Categorie_list>().get_user();
-      context.read<Categorie_list>().edit_index(3);
-      // Navigator.pop(context);
+      Provider.of<Categorie_list>(context, listen: false).Check_auth();
+      Provider.of<Categorie_list>(context, listen: false).get_user();
+       Provider.of<Categorie_list>(context, listen: false).edit_index(3);
+      Navigator.pop(context);
     }
   }
 

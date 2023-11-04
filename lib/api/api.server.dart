@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-
 import 'package:chairsapp/main.dart';
 import 'package:chairsapp/models/cart.dart';
 import 'package:chairsapp/models/favoritproduct.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
@@ -48,96 +48,143 @@ class Apiserver {
   }
 
   static Future<dynamic> addtocart(int productid, int quantity) async {
-    try{
-
-    String? auth = await Authontication.getData('auth');
-    Map data = {
-      "quantity": quantity.toString(),
-      "productid": productid.toString()
-    };
-    var res = await http.post(Uri.parse('http://localhost:3000/api/addtocart'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': auth!
-        },
-        body: json.encode(data));
-    }
-    catch(e){
-
-    }
+    try {
+      String? auth = await Authontication.getData('auth');
+      Map data = {
+        "quantity": quantity.toString(),
+        "productid": productid.toString()
+      };
+      var res = await http.post(
+          Uri.parse('http://localhost:3000/api/addtocart'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': auth!
+          },
+          body: json.encode(data));
+    } catch (e) {}
   }
 
- static Future<dynamic> updateCartItemQuantity(int productid, int quantity) async {
+  static Future<dynamic> updateCartItemQuantity(
+      int productid, int quantity) async {
     String? auth = await Authontication.getData('auth');
     Map data = {
       "quantity": quantity.toString(),
       "productid": productid.toString()
     };
-    try{
-
-    var res = await http.post(Uri.parse('http://localhost:3000/api/updateCartItemQuantity'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': auth!
-        },
-    body: json.encode(data));
-    }
-    catch(e){}
+    try {
+      var res = await http.post(
+          Uri.parse('http://localhost:3000/api/updateCartItemQuantity'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': auth!
+          },
+          body: json.encode(data));
+    } catch (e) {}
   }
 
   static Future<int> quantityInCart(int productid) async {
     try {
       String? auth = await Authontication.getData('auth');
-
+      if(auth!.isNotEmpty)
+      {
       var res = await http.get(
           Uri.parse('http://localhost:3000/api/quantityInCart/$productid'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': auth!
           });
+
       if (res.statusCode == 200) {
         int b = jsonDecode(res.body)['quantity'];
         return b;
       } else
         return 0;
+      }
+      return 0;
     } catch (e) {
       return 0;
     }
   }
 
-  static Future<List<cart>> getUserCart()async{
-    try{
-
-     String? auth = await Authontication.getData('auth');
-       var res = await http.get(
+  static Future<List<cart>> getUserCart() async {
+    try {
+      String? auth = await Authontication.getData('auth');
+      var res = await http.get(
           Uri.parse('http://localhost:3000/api/getUserCart'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': auth!
           });
       List<dynamic> data = jsonDecode(res.body);
-     return data.map((e)=> cart.fromJson(e)).toList();
-    }
-    catch(e){
+      return data.map((e) => cart.fromJson(e)).toList();
+    } catch (e) {
       return [];
     }
   }
 
-  static Future<dynamic> removecart(int  productId)async{
+  static Future<dynamic> removecart(int productId) async {
     String? auth = await Authontication.getData('auth');
-    Map data = {
-      "productId":  productId.toString()
-    };
-    try{
+    Map data = {"productId": productId.toString()};
+    try {
+      var res = await http.post(
+          Uri.parse('http://localhost:3000/api/removeFromCart'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': auth!
+          },
+          body: json.encode(data));
+    } catch (e) {}
+  }
 
-    var res = await http.post(Uri.parse('http://localhost:3000/api/removeFromCart'),
+  static Future<dynamic> loginuser(
+      String email, String password, BuildContext context) async {
+    Map data = {"password": password, "email": email};
+    var res = await http.post(Uri.parse('http://localhost:3000/api/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': auth!
         },
-    body: json.encode(data));
+        body: json.encode(data));
+    print(res.body);
+    if (res.body == 'Access denied, no token provided') {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return SizedBox(
+              height: 300,
+              child: Container(
+                  height: 300,
+                  width: 300,
+                  color: Colors.orange,
+                  child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Access denied, Wrong password or email',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 30,),
+                      TextButton(onPressed: (){
+                        Navigator.pop(context);
+                      }, child: Text('ok',style: TextStyle(color:Colors.white),))
+                    ],
+                  ))),
+            );
+          });
+      // Navigator.pop(context);
+    } else {
+      var resfinal = await http.get(
+        Uri.parse('http://localhost:3000/api/myuser'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': res.body
+        },
+      );
+      Authontication.storeData('auth', res.body);
+      Myuser = user.fromJson(jsonDecode(resfinal.body));
+      return Myuser;
     }
-    catch(e){}
   }
 
   static Future<dynamic> googleSignIn() async {
@@ -224,6 +271,8 @@ class Apiserver {
   static Future<bool> isProductInFavorites(int productId) async {
     try {
       String? auth = await Authontication.getData('auth');
+      if(auth!.isNotEmpty)
+      {
       var res = await http.get(
           Uri.parse(
               "http://localhost:3000/api/isProductInFavorites/${Myuser.id}/${productId}"),
@@ -233,6 +282,8 @@ class Apiserver {
           });
 
       return jsonDecode(res.body);
+      }
+      return false;
     } catch (e) {
       return false;
     }
@@ -258,7 +309,7 @@ class Apiserver {
     }
   }
 
-  static Future<void> uploadImageWithFormData(
+  static Future<dynamic> uploadImageWithFormData(
     File imageFile,
     String username,
     String email,
@@ -285,10 +336,10 @@ class Apiserver {
     var response = await request.send();
     print(response.stream);
     if (response.statusCode == 200) {
-    String responseBody = await response.stream.bytesToString();
-    Authontication.storeData('auth',responseBody);
-    Authontication.storeData('auth',responseBody);
-      print('Image and form data uploaded successfully');
+      String responseBody = await response.stream.bytesToString();
+      Authontication.storeData('auth', responseBody);
+      Authontication.storeData('auth', responseBody);
+      return responseBody;
     } else {
       print('Image and form data upload failed');
     }
